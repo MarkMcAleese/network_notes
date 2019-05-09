@@ -60,4 +60,75 @@ Requirements of IDS:
     - Autonomous and fault tolerant operation
     - Low resource Requirements
     - Self protection
+
+Host Intrusion Detection System (HIDS)
+
+    - Works on information available on a system:
+        + OS and application logs 
+        + System files
+    - Can detect attacks by insiders e.g. when files are copied to USB sticks.
+    - Has to be installed on every system:
+        + Hard to manage on large number of systems.
+        + Not available for every platforms.
+        + May be disabled by the attacker.
+    - Produces lots of information.
+    - Often no real-time analysis.
+
+Network Intrusion Detection System (NIDS)
+
+    - Analysis of flow of information on the network.
+    - Can detect invalid packets, attacks on application layers, DDoS, spoofing, port scans.
+    - CAn no detect offline attacks - E.g. copying files to USB.
+    - Often used on network buns to monitor a segment.
+
+    Placement:
+        - Monitors throughout the network.
+        - Sends central IDS/SIEM (Sends all information to this box, find attacks that could be spread over the network)
+        - Heavy overhead sending the data.
+        
+Signature-based Detection:
+    Basic idea:
+        - Some attacks will have patterns that can be described with details.
+    Identifying attack signatures:
+        - Analyzing vulnerability's, past attacks.
+    Specifying attack signatures:
+        - Based on identified knowledge, "rules" will describe the attack.
     
+    
+            + Easy to setup
+            + In some environments acceptable false positive rate
+        Disadvantages:
+            - Requires prior knowledge of attacks.
+            - Requires continuous updating (large database).
+            - High rate of false negatives.
+            - IP and TCP preprocessing requires resources
+            - Possibility of bypassing
+
+Behavior/Anomaly-based Detection:
+    Basic idea
+        - Detect behavior that differs significantly from normal use.
+        - Users and systems have "normal" use patterns.
+        - Assumption "behavior" can be described by an administrator.
+        - Analysis: events, and Abnormal behavior
+
+    Properties:
+        Advantages:
+            + Approach can detect unknown attacks.
+            + Attacks cannot easily be prepared to avoid detection.
+            + If well set up: acceptable false positive rate.
+            + Events quite easy to interpret.
+        Disadvantages:
+            - High administrative effort.
+
+Automatic Anomaly Detection:
+
+ Properties:
+        Advantages:
+            + Can detect unknown attacks.
+            + Comparability easy to setup
+        Disadvantages:
+            - Privacy - Pattern collection and work-related or person habits.
+            - Requires continuous refreshing of normal behavior patterns.
+            - High amount of false positives.
+            - True positives can be difficult to interpret.
+            - Normal behavior pattern matches an attack pattern, this will not be detected.
