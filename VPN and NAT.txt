@@ -1,0 +1,303 @@
+Issue with IP
+    Layer 2 and 3:
+        - Eavesdropping and packet sniffing
+        - Allows Spoofing
+
+General countermeasures for IP issues:
+    - IP Filtering: 
+    - Network Address Translation
+    - VPN
+    - Encrpyted IPV4 and IPV6
+
+What is IP Filtering:
+    Below are the common ways of IP filtering:
+
+        Router can be configured to filter out packets based on:
+            - IP Address (Black Listing)
+            - Commonly used in Firewalls
+
+        Port numbers:
+            - Rogue protocols use multiple ports
+            - E.g. stop Telnet traffic, this would have stopped the mira attack.
+
+        Protocol Types ( TCP, UDP, ICMP)
+            - Course grain filtering.
+            - This would block good traffic that should be able to sent.
+
+Network Address Translation (NAT):
+
+    - ISP provides 1 IP but we have multiple devices.
+    - The solution is to use internal address then map them to the external address
+        - Common approach: 
+            - Router rewrites TCP/UDP source ports to unique value per IP flow
+            - Stores new source port in table with source address and old port
+            - Replaces source IP Address with external address 
+             
+                    Private address              Public address
+    [Private Network] ------------> [Nat Router] --------------> [Internet]
+     
+     Downside to NAT usage:
+        - Not designed as a security device.
+        - Does not provide security and is often coupled with a firewall.
+        - So you might want to couple with a firewall to improve security 
+
+    Internal address:
+        - 10.0.0.0/8 
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+
+    Types: Static and Dynamic
+
+    Static NAT:
+        - One to one mapping 
+        - Used with small number of machines
+        - E.g. 129.186.5.100:80 -> 192.168.20.30:80
+               129.186.5.101:80 -> 192.168.20.31:80
+    
+    Dynamic NAT:
+        - More machines than static IP's
+        - Used for outgoing access
+        - Inside can have same address range as a valid outside network (Overlapping)
+    
+    Handling inbound connections:
+        - Servers need a public address
+            - Two network (DMZ)
+            - Tunneling
+
+            [NAT] <-> A  <-> [Router]
+                  ^-> B -^
+        Tunneling through a NAT
+            - We can allow public internet address to a NAT Address, we can use the NAT to decided where the traffic to go.
+            - Need unique address and port e.g. if two need port 80 then you need two public addresses.
+            - NAT will drop packets it doesn't have in its table or sends back ICMP destination unreachable packet.
+
+VPN (Virtual Private Network)
+
+    Def:
+        A restricted-use, logical computer network that is constructed rom the system resources of a 
+        relatively public, physical network (e.g. internet), often by using encryption, and often by tunneling
+        links of the virtual network across the real network [RFC2828]
+    
+    Used to create encrypted and authenticated communication channels (tunnels) between devices.
+
+    Three modes:
+        - Remote access client connections
+        - LAN-to-LAN inter-networking (Office in belfast and dublin)
+        - Controlled access within an intranet 
+
+    Protocols:
+        - PPTP: Point-to-point tunneling protocols
+        - L2TP: Layer-2 tunneling Protocol
+        - GRE: Generic Routing Encapsulation
+        - IPsec
+    
+    Network to Network VPN:
+        - [B] -> [Network] -> [VPN] -> [Internet] -> [VPN] -> [Network] -> [A]
+    Client-to-Client VPN:
+        - [Client VPN] -> internet -> [Client VPN] (Encrypted Authenticated)
+                             ^- [C]
+    Client-to-Network VPN:
+        - Kinda a mix of Network-to-network and client-to-client.
+
+    Point-to-Point Tunneling Protocol:
+
+        - We want to send PDU over internet.
+        - the payload of PPTP PDU's are PPP packets
+            [PPP]
+            [GRE v.2 header]
+            [IP Header]
+            [MAC Layer]
+        - PPP Packets are encapsulated in GRE packets that temselves are encapsulated in IP packets.
+        - PPTP realizes a tunnel over the internet that carries PPP packets
+    
+    Compulsory tunneling:
+        - PPTP is compulsory tunneling doesn't reach client pc (its point to point for them).
+        - PPP at layer 2, PPTP from ISP POP.
+        - Subnet security 
+
+    Voluntary Tunneling protocol layers:
+        - Extends to the client pc's
+        - This gives us end-to-end security
+        - End system security services 
+        - This will slow down the connection
+
+    L2TP vs PPTP:
+        - Both use: 
+            + PPP for user packets
+            + Extends PPP by allowing layer-2 and PPP endpoints to reside on different devices
+            + support voluntary and compulsory tuennling 
+            + provide for header compression 
+
+        - PPTP is consider easy to setup but has security issues: Weak encryption
+
+        - L2TP - Offers stronger security
+
+        
+IPSec
+
+    Overview:
+        The IPSec architecture:
+            - Modes: Transport or Tunnel
+        IP Security Policy Database (SPD)
+        Security associations (SA) and the SA Database (SADB)
+        
+        IPSec Security Protocols:
+            - Authentication Header (AH)
+            - Encapsulating Security Payload (ESP)
+        
+        Entity Authentication and the Internet Key Exchange (IKE)
+
+    Main issue with IP:
+        - Lack of source IP: Lack of Data origin authentication / Data integrity:
+            + Has the packet been sent by the source?
+            + Was the packet changed?
+            + Is the destination correct
+        
+        - Confidentiality:
+            + Was the packet inspected by a third party.
+
+    Security objectives:
+        Data origin Authentication / connectionless data integrity:
+            + Its not possible to send an IP datagram with masqueraded IP source.
+            + Its not possible to modify an IP datagram in Translation
+            + Replay protection: its not possible to later replay a record packet without detection
+        Confidentiality:
+            + It is not possible to eavesdrop on the content of IP datagrams.
+
+    Security Policy:
+        - Setup by endpoints - What they want to protect and when.
+
+    IP Authentication Header - Authentication and integrity of payload and header. *
+    IP Encapsulating Security Protocol (ESP) - Confidentiality of payload.
+    ESP with optional ICV (Integrity check value) - Confidentiality, authentication and integrity of payload. *
+
+    End-points, gateways = Can apply IPSec support.
+
+    IPsec  architecture:
+        - Concepts:
+            Security association (SA), security association database (SADB)
+            Security policy, security policy database
+        - Fundamental IPsec Protocols:
+            - Authentication Header and Encapsulating Security Payload (ESP)
+        - Models: Tunnel or Transport
+        - Key Management Procedures: IKE & IKEv2
+
+        Workflow:    
+            IKEv2 needs to key exchange
+            IKE SA
+            IPSec SA Pair
+            ESP protects data
+
+        - Security services are provided to one SA by the use of either AH or ESP.
+        - For bi-directional communication two security associations are needed
+        - An SA is uniquely identified by a triple consisting of security parameter index,
+          an IP destination address, and a security protocol identifier (AH/ESP)
+        - An SA can be setup between the following: (Tunnel or Transport mode)
+            + Host to Host
+            + Host to Gateway (or vice versa)
+            + Gateway to Gateway
+        - There are two database associated with SAs:
+            + The security policy database specifies what security services are to be provided to which IP packets and in what fashion
+            + The security association database
+
+        IPSec Security Policy Selection:
+            Selectors to be extracted from the network and transport layer headers allow to select a specific policy in SPD:
+                + IP source address: Specific host, network prefix, address range or wildcard.
+                + IP destination address: Specific host, network prefix, address range or wildcard.
+                + Protocol: The protocol identifier of the transport protocol for this packet.
+                + Upper layer ports: If accessible, the upper layer ports for session oriented policy selection.
+            [Match (source and dest) | Action]
+
+        Security Association Database:
+            - Algorithm, IPSec Protocol, Key, SPI this will decided what to use.  
+
+        Transport Mode:
+            - Can only be used between end-points (Host to Host or Host to Gateway)
+            - Header: Transport mode just adds a security specific header (+ eventual trailer):
+                      [IP Header | IPSec Header | Protected data]
+            Functionality:
+                - Protects upper layer protocols 
+                - Includes TCP or UDP segment or an ICMP packet
+                - used for End-toEnd communication
+                - ESP encrypts and optionally authenticates the IP payload but not the IP header.
+                - AH in transport mode authenticates the IP payload and selected portions of the IP header.
+
+        Tunnel mode:
+            - Can be used with arbitrary peer's.
+            - Header: Tunnel mode encapsulates IP Packets:
+                      [IP Header | IPSec header | IP Header | protected data]
+            - Tunnel will allow for a gateway protecting traffic on behalf of other entities (e.g. subnet hosts)
+            Functionality:
+                - Protects entire IP packet
+                - Used when one or both ends of a security association are security gateway.
+                - Hosts can use secure communications without implementing IPsec.
+                - ESP in tunnel moe encrypts and can authenticates the inner IP packet, including the inner IP header.
+                - AH in tunnel mode authenticates the entire inner IP packer and selected portions of the outer IP header.
+
+        Keys:
+            - Internet Security Association Key management Protocol (ISAKMP):
+                Defines generic framework for key authentication, key exchange and negotiation of security association parameters.
+            - Internet key Exchange (IKE)
+                Defines auth and key exchange.
+
+        How IPSec protects against Replay:
+            - Both AH and ESP-protected IP packets carry a sequence number which realizes a replay protection:
+                + When setting up an SA this sequence number is init to 0.
+                + The sequence number is increased with every packet.
+                + The sequence number is 32 bit long and a new session key is needed before a wrap-around occurs.
+                + the receiver of an IP packet checks if the sequence number is contained in a window of acceptable numbers.
+                    + If a received packet has a sequence number which is:
+                        - to left of current window => dropped packet.
+                        - inside current window => accept packet.
+                        - to right of current window => accept and advances the current window.
+        
+        Main integration:
+
+            OS: 
+                Application
+                Transport 
+                Network + IPsec
+                Data links
+             
+            Bump in the stack:
+                Application
+                Transport 
+                Network
+                IPsec
+                Data links
+
+        or
+
+        We can implement it at the router level:
+            Advantages:
+                + Ability to secure IP packets flowing between two network over a public network
+                    + Allows to create VPN's 
+                    + No need to integrate IPsec in every end system
+                + Ability to authenticate and authorize IP traffic coming in from remote users
+
+        When to use IPSec mode?
+            Transport Mode: Cryptographic endpoints are communication endpoint.
+            Tunnel Mode: one Cryptographic endpoints are not communication endpoint. (Security on behalf of others.)
+
+     ESP (Encapsulating Security Payload):
+        + Confidentiality by encrypting encapsulated packets or just their payload.
+        + Data origin authentication, by creating and adding MAC's to packets.
+
+    AH (Authentication Header):
+        + Replay protection
+        + Data origin authentication by creating and adding MAC's to packets.
+
+    Issues with IPSec 
+        Compression:
+            - If encryption is used then the resulting IP packets can not be compressed in the link layer.
+            - Therefore, the IP payload compression protocol (PCP) has been defined.
+            - PCP can be used with IPsec:
+                - IPsec Policy definition allows to specify PCP.
+                - IKE SA negotiation allows to include PCP.
+            
+            Problems of end-to-end security with header processing in intermediate nodes:
+                - Interoperability with firewalls:
+                    - End-to-end encryption conflicts with firewalls as you are no longer able to inspected packet.
+                - Interoperability with NAT
+                    - Encrypted packets neither permit analysis nor change of addresses
+                    - Authenticated packets will be discarded if source or dest is changed.

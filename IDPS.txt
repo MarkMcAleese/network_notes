@@ -1,0 +1,63 @@
+Principal defense categories:
+    - Prevention
+    - Detection
+    - Response
+
+Examples of intrusion:
+    - Remote root compromise of an e-mail server.
+    - Defacing a web server.
+    - Running a packet sniffer on a workstation to capture usernames and password.
+
+Goal
+    - Supervision of computer systems and communication infrastructures in order to detect intrusions and misuse.
+
+Intrusion Detection:
+    - A system's second line of defense 
+    - Is based on assumption that the behavior of the intruder differs from that of a user in ways that be quantified.
+
+Tasks:
+    Audit:
+        - Recording of all security relevant events of a supervised system.
+        - Preprocessing and management of recorded audit data.
+    Detection:
+        - Automatic analysis of audit data.
+        - Approaches:
+            + Signature analysis.
+            + Abnormal behavior Detection.
+            + Anomaly Detection.
+        - Types of errors:
+            + False positive  : a non-malicious action is reported as an intrusion.
+            + False negative : an intrusion is not detected.
+    Response:
+        - Reporting of detected attacks.
+        - Potentially also initiating countermeasures.
+
+Detection Quality:
+
+Classification 
+
+    False Alert  (False postive)        |   Detected Attack (True positive)
+    Irrelevant event (True negative)    |   Unrecognized Attack (False negative)
+        (Legitimate)                                (Illegitimate)
+                                    Events
+
+    Accuracy =   TP + TN
+               ------------
+                TP+FP+TN+FN
+
+    Sensitivity =       TP
+                    -----------
+                       TP+FN
+
+    Precision =         TP
+                    -----------
+                       TP+FP
+
+Requirements of IDS:
+    - High Accuracy
+    - Easy to integrate into a system / network.
+    - Easy to configure and maintain. 
+    - Autonomous and fault tolerant operation
+    - Low resource Requirements
+    - Self protection
+    

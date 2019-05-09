@@ -1,0 +1,197 @@
+What is access control?
+
+    - Access control is a enforce mediation on subject requests for access to objects in a security policy.
+
+    [Subject] -Request-> [Reference Monitor] -> Grant
+                                |-> Deny
+    
+Network Access control
+
+    - Access Requester
+        Node that is trying to access.
+    - Policy Server
+        What access should be granted.
+    - Network Access Server 
+        Access control point, it can use its own authentication service or send it off to another service.
+
+AAA 
+
+    Authentication - Ensuring the identity of an entity
+    Authorization  - Ensuring that an entity has permission to access.
+    Accounting     - Keeping an auditable record of which entities have accessed which resources. 
+
+Basic steps of a AAA service
+
+    1) User sends a user ID and password to the NAS (network access server) : NAS can send this to an authentication server.
+    2) The NAS collects the remote user's ID and password.
+    3) The NAS sends an authentication request to the AAA server.
+    4) The AAA server checks identity and return connection and authorization record.
+    5) The NAS confirms connection and writes the audit record.
+
+RADIUS
+    - Remote authentication Dial-In User Service
+    - Networking protocol providing centralized AAA services.
+
+    Steps:
+        1) User initiates PPP authentication to the NAS.
+        2) NAS prompts for username and encrypted password or challenge authentication protocol (CHAP)
+        3) User replies.
+        4) RADIUS client sends username and password to RADIUS server
+        5) RADIUS server responds with Accept, reject or challenge.
+        6)The RADIUS client acts upon services and services parameters bundled with Accept or Reject.
+    
+    Accounting:
+        [HOST] --------------- RADIUS client ----------------- RADIUS Server
+    
+Kerberos
+
+    A network authentication protocol, this can build on what we have already seen with 
+    providing strong authentication for client and servers applications.
+
+    Effective in open distributed environments where users have a unqiue ID for each application.
+    This verifies that users who they claim to be and network services they use are within their permission profile.
+
+    Components:
+        Client (User)
+        Authentication server (AS)
+        Ticket-granting server (TGS)
+        Application server
+    
+    Ticket-granting server:
+        This allow us to have access to many application servers at once depending on the request.
+
+    Operation:
+        Complexity added by ticket system.
+    
+    Steps:
+        1) Request Ticket. (AS)
+        2) Grant Ticket + session key. ( Ticket encrypted via TGS secret key, Session key is encrypted via requester user secret key) 
+           The client can decrypt the session key and is enough to communicate with the TG. (Can authenticate itself with TGS)
+        3) Request service - granting ticket. (TGS)
+        4) Ticket + session key.
+        5) Request service
+        6) provide server authentication
+    
+    Issues:
+        - Security depends on implementation.
+        - KDC must be physically secured.
+        - Can be single point of failure.
+        - Key length is important: Too short -> brute force, too long -> overloads the system with computation, 
+          password -> vulnerable to password guessing.
+        - Need to embed kerberos system calls into any application that use system - called Kerberizing (It has to be able to work with Kerberos
+
+Network Access Enforcement Methods:
+
+    NAC enforcement methods:
+        - IEEE 802.1X
+        - Virtual local area networks (VLAN's)
+        - Firewall
+        - DHCP management.
+
+
+IEEE 802.1X (Port Based)
+    - Port based network access control -> Authenticating and authorizing devices attached to a LAN port.
+    - Introduces the notion of two logical ports:
+        + The uncontrolled port allows to authenticate a device (only allows this).
+        + The controlled port allows an authenticated device to access LAN services.
+    Roles:
+        - Supplicant: requesting access.
+        - Authenticator: demands that supplicant to authenticate itself.
+        - Authentication Server: for verification.
+    
+IEEE 802.1Q (VLAN's)
+    - Creating of virtual local area network.
+    - Used to realize access control at the link level.
+    - This will tag packets with VLAN tag. (12 bit identifier)
+    - Switches ensure that packets with certain vlan id's are only delivered on certain network ports.
+    - Host don't add vlan tag but instead added at first trusted switch and remove on the last trusted switch.
+    
+Firewalls
+
+    Controls access to a network via the firewall (Subnet level)
+    
+    Can do:
+        - Focus for security decisions.
+        - Enforce a security policy.
+        - Log internet activity.
+        - Can limit exposure to security problems to one part of a network.
+    Can't do:
+        - A firewall cannot protect against insiders.
+        - A firewall cannot protect connections that do not pass through it.
+        - Can't protect against threats that aren't in the firewall.
+        - A firewall cannot fully protect against viruses.
+        - Cannot setup itself (Cost of operation)
+
+    Two types of policies:
+        Default deny strategy:
+            - Allow only services that can be safely provided and for which there is a legitimate.
+            - Deny any other services.
+        Default permit strategy:
+            - Permit every service that is not considered dangerous.
+            - Block what you wish to block.
+
+    Types:
+        Packet Filtering -> Simple pattern to match against packets.
+            + Network layer firewall
+            + Acts like a normal router
+            + Each packet is independent (simple rules), which makes for fast implement.
+            + Only simple rules
+            + Can't prevent application-specific attacks.
+            + Most don't support for advanced authentication schemes.
+            + Configuration can be wrong which creates security breaches.
+        
+        Stateful Inspection -> Matching layer 2 to layer 4, you have state information. Packets are checked, stateful is looking a flow process.
+            (E.g. syn packet comes in you can see what flow process is already happen.)
+            + Tracking state of connections.
+            + State table => state machine describing protocol communication.
+            + E.g. TCP - connection establishment, usage, termination.
+            + Deals with packet streams.
+            + Slower than stateless.
+            + Can implement complex rules.
+
+        Application Proxy -> Looking at application level, did packets come out of sync etc.
+            What is a proxy?
+                - A device that sit between hosts and to each end of the connection it looks like the dest.
+                - Proxy provides a route to the host, acts like a relay.
+                - PDU level: circuit level.
+                - Application level proxy.
+            - Proxy firewall must understand the application that is being sent through.
+            - Candidate services for proxying: FTP, Telnet, DNS, SMTP, HTTP
+            - Proxy servers usually run on bastion hosts
+            - Proxy must understand the specific application, the service is not supported and cannot be forwarded across the firewall.
+            - Tends to be more secure than packet filters.
+
+            Disadvantage:
+                - The additional processing overhead on each connection.
+            
+            Next-Generation Firewalls:
+                - Standard capabilities of the first-generation firewalls: packet filtering, stateful, NAT, VPN etc
+                - Integrated intrusion prevention: vulnerability-facing and threat-facing signatures.
+                - Fully stack visibility and application identification: can enforce policy at the application layer.
+                - Extra intelligence: take information from external sources to improve decisions.
+                - Adaptability to the modern threat landscape: support upgrade paths for integration of new information.
+                - In-Line support: minimum performance degradation or disruption.
+
+                What is a bastion host?
+                    - A computer that must be highly secured because it is more vulnerable to attacks than other hosts.
+                    - Main point of contact for users processes of host.
+                
+                What is DMZ?
+                    - A sub-network added between an external and an internal network, in order to provide an additional layer of security.
+
+
+
+    Attacks and Counter measures:
+
+        IP Address spoofing:
+            - Countermeasure is to discard packets with an inside source address if the packet arrives an external interface
+        Source routing attacks:
+            - Countermeasure is to discard all packets that use this option.
+        Tiny fragment attacks:
+            - Countermeasure is to enforce a rule that the first fragment of a packet must contain a predefined minimum amount of the transport header.
+    
+    
+
+
+
+
