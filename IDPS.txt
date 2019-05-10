@@ -132,3 +132,103 @@ Automatic Anomaly Detection:
             - High amount of false positives.
             - True positives can be difficult to interpret.
             - Normal behavior pattern matches an attack pattern, this will not be detected.
+
+
+Problems with IDS:
+    IDS Evasion 
+        - Anomaly: Attack may act slowly, or high amount of legitimate traffic to cover an attack.
+        - Signature-based IDS: Attackers may construct attack so they aren't detected.
+                            Encryption only work if the IDS also has the private key.
+
+    Audit data:
+        - Amount of log data: High data volume requires storage and processing.
+        - Location of data: if stored on log server has to be transfer.
+                            if on the system - uses a lot of resources of the system.
+        - Protection of audit data: compromised systems also means audit data is compromised.
+        - Expressiveness: What is relevant, low percentage of useful information
+    
+    Privacy ( Data Protection ):
+        - User-Identifying data are logged: User ids, names of directories, host type + time + action,
+                                            access rights + time + action.
+        - IDS audits may violate privacy of the user.
+        - Potential solution: log activities with user pseudonyms and ensure that they can only be
+                              mapped to user ids upon incident detection.
+    
+    Limited efficiency of analysis:
+        - Most IDS follow a centralist approach for analysis: so-called agents collect audit data and one
+        central evaluation unit analyzes this data. -> No partial evaluation in agents
+                                                    -> Performance bottleneck.
+        - Insufficient efficiency, especially concerning attack variants and attacks with parallel actions.
+
+    High number of false positives:
+        - Too many false alarms
+        - Countermeasure: Alarm correlation.
+    
+    Further problems and open issues:
+        - Self protection
+        - High maintenance overhead
+        - Cooperation between multiple IDS
+
+Intrusion Prevention Systems:
+
+    Motivation:
+        - Automatic event generation insufficient: 
+            -> Automatic exploitation is extremely fast
+            -> Too many attacks on current systems.
+        - Led to development of IPS
+        - IDS systems nearly all include IPS
+    
+    Approaches:
+        - Inline operation and suppression 
+            - All traffic goes through IPS
+            - Any flow that matches a attack event is suppressed
+            Pros:
+                + Efficient.
+                + No race conditions.
+            Cons:
+                - Possible bottle neck and single point of failure.
+                - May be difficult to set up.
+        
+        - Firewall reconfiguration:
+            - IPS reconfigs an existing firewall to suppress suspicious flows.
+            Pros and Cons:
+                + Easy setup
+                + No single point of failure
+                - Race conditions: What if the attack already reached the network.
+        
+        - Send TCP-RST Packets:
+            - IPS reset TCP flows by resetting the connection
+            - Pro's and Con's:
+                + Same pro's as above.
+                - Works only for TCP.
+                - Race conditions
+        
+        Deflection:
+            - Reconfiguration of firewall and/or routers.
+            - Attacker is transparently redirected to honey pots to slow down their attacks.
+            + Pro's and Con's:
+                + May cause significant slow down.
+                - Hard to setup
+                - Race conditions
+        
+        Honeypots:
+            
+            Has no production value: These are fabricated systems to make it look real.
+            
+            Designed to: Divert attackers from real system, collect information about the attack and 
+                         Encourage the attack to stay on the system long enough.
+            
+            - This is a decoy systems that are designed to lure in attackers.
+            - Give enough time to log and track the attacker.
+            - Also build entire honeypot network that emulate an enterprise with actual or simulated traffic and data.
+
+            Deployment:
+                • Location 1: Outside external firewall to track connection attempts to unused IP addresses
+                • Location 2: Within the DMZ
+                • Location 3: Fully internal
+
+            
+Unified thread management:
+    What is it?
+        - Essentially consolidation of stateful inspection firewalls, antivirus and IPS into one application.
+        - Lives between internet, firewall and the DMZ that will send logs to another server.

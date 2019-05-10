@@ -1,0 +1,219 @@
+Attack Techniques:
+    Resource destruction by:
+        • Hacking into systems
+        • Making use of implementation weaknesses such as buffer overrun
+        • Deviation from proper protocol execution
+   
+    Resource reservations that are never used (e.g. bandwidth)E.g. TCP connections with window 0
+    
+    Resource depletion by causing:
+        • Storage of (useless) state information
+        • High traffic load (requires high overall bandwidth from attacker)
+        • Expensive computations (“expensive cryptography”)
+    
+    Origin of malicious traffic:
+        • Single source with single / multiple (forged) source addresses
+        • Multiple sources with forged / valid source addresses (Distributed DoS)
+
+Resource Destruction
+    Deviation from proper protocol execution – well known examples:
+    Ping-of-Death
+        • Attacker sends IP fragments that exceed the total size of 65,535 bytes
+        • After reassembly a buffer overflow occurs…
+    LAND attack
+        • TCP spoofing is used to send SYN packet
+        • Source & destination address equal
+        • OS may run in an infinite loop
+    Teardrop attack
+        • Exploits TCP/IP fragmentation reassembly
+
+    Defenses against resource destruction (disabling services):
+    • Hacking:
+        • Good system administration
+        • Firewalls, logging & intrusion detection systems
+    • Implementation weakness:
+        • Code reviews, stress testing, etc.
+        • Software updates
+    • Protocol deviation:
+        • Fault tolerant protocol design
+        • Error logging & intrusion detection systems
+        • “DoS-aware protocol design”, e.g. be aware of possible DoS attacks when reassembling packets
+
+Resource Depletion:
+    Expensive computations (“expensive cryptography”):
+        • Often at “higher” layers
+        • At L3/L4: Parallel negotiation of many cryptographic connections
+    Storage of (useless) state information:
+        • IP fragment attack
+        • Attacker sends IP fragments that never form a complete packet
+        • Receiver must store fragments until timeout
+        • TCP SYN Flooding
+    High traffic load (requires high bandwidth or amplification):
+        • Smurf attack
+        • DNS & NTP amplification
+
+    Defenses against resource depletion:
+        • Generally:
+            • Rate Control (ensures availability of other functions on same system)
+            • Authentication & Accounting
+        • Do not perform expensive operations, reserve memory, etc., before authentication
+        • Expensive computations: careful protocol design, verifying the initiator’s “willingness” to spend resources itself (e.g. “client puzzles”)
+        • Memory exhaustion: stateless protocol operation (e.g. verify source of request)
+
+Smurf amplification DoS attack
+    1. Send ping request to broadcast address (ICMP Echo Request)
+    2. Many responses:
+        • Every host on target network generates a ping reply (ICMP Echo Reply) to victim
+
+    Prevention: reject external packets to broadcast address
+
+TCP SYN Flood I - Low rate
+    Single machine:
+        • SYN Packets with random source IP addresses
+        • Fills up backlog queue on server
+        • No further connections possible
+
+    Low rate SYN Flood defenses
+        Non-solution:
+            • Increase backlog queue size or decrease timeout
+        Correct solution (when under attack) :
+            • SYN cookies: remove state from server
+            • Small performance overhead
+
+SYN Floods II – Massive Flood
+    Attack: Command Bot army to flood specific target
+    Protection: Only forward established TCP connections to target site
+
+Botnet (Command and Control)
+
+    The attacker classifies the compromised systems in:
+        • Master systems:
+            • Receive command data from attacker
+        • Slave systems:
+            • Launch the proper attack against the victim
+
+        • During the attack there is no traffic from the attacker
+
+
+DNS DoS Attacks
+    • DNS runs on UDP port 53 - DNS entry for victim.com hosted at victim_isp.com
+    • DDoS attack:
+        • flood victim_isp.com with requests for victim.com
+        • Random source IP address in UDP packets      
+    • Takes out entire DNS server: (collateral damage)
+
+DoS Reflector Attacks
+    • A network component that responds to packets
+    • Response sent to victim (spoofed source IP)
+
+DoS at higher layers
+    • SSL/TLS handshake: Client hello -> Server hello (pub-key) -> Client key exchange.
+    • RSA-encrypt speed ≈ 10 × RSA-decrypt speed
+        ⇒ Single machine can bring down ten web servers
+    • Similar problem with application DoS:
+        • Send HTTP request for some large PDF file
+        • Easy work for client, hard work for server
+
+Defenses - Concerning origin of malicious traffic:
+    • Defenses against single source attacks:
+        • Disabling address ranges (helps if addresses are valid)
+        • Might also be misused by forged addresses…
+    • Defenses against forged source addresses:
+        • Ingress Filtering at ISPs (in an ideal world...)
+        • “Verify” source of traffic (e.g. with exchange of “cookies”)
+        • Tracing back the true source of packets with spoofed addresses
+    • Widely distributed DoS:
+    • Anycast infrastructure, as in DNS
+        • Distributed data centers & content delivery networks
+        • ISP filters with advanced methods to distinguish between bot and honest client (e.g. by verifying JavaScript is correctly executed etc.)
+
+    
+Client Puzzles
+    Example scheme:
+        • The server generates two random numbers NS and X’ and computes a cryptographic hash value h = H(NS, X’) of them
+        • The server then provides the client with one of the random numbers NS and k bits (for example 8 bit) of the hash value
+        • The client must then guess random numbers and compute cryptographic hash values until k bits of a resulting hash value match the value that has been supplied by the server
+        • As cryptographic hash functions can not be inverted, the client on average has to try 2k - 1 different random numbers until they find one number X so that 8 bits of H(NS, X) match the
+          value provided by the server
+        • However, in order to generate and check the client puzzle, the server just needs to compute the cryptographic hash function twice
+    
+Ingress Filtering:
+
+    • Routers block arriving packets with illegitimate source addresses
+    • To reduce the address space that can be used by the attacker by filtering the packets at the edge of the network
+    • Incoming packets with a source address belonging to the network are blocked
+    • Incoming packets from the public Internet with a private source address are blocked
+    • Egress filtering: Outgoing packets that carry a source IP address that does not belong to the network are blocked
+
+    Problems:
+        1. Issues with Mobile IP (some protocols require a foreign address)
+        2. Larger management overhead at router-level
+        3. Potentially large processing overhead at access routers
+        (e.g. large ISP running a large AS with numerous IP ranges and DHCP)
+        4. Universal deployment needed (if 10% of ISPs do not implement, there’s no defense)
+
+
+Traceback – Simple Method
+
+     Identify the source address and the attack path of a packet without relying on the source address information.
+
+     How? -> Change routers to record information in packets
+
+     Write path into network packet
+        • Each router adds its own IP address to packet
+        • Victim reads path from packet
+    Problem:
+        • Requires space in packet, Path can be long, No extra fields in current IP format
+        • Changes to packet format too much to expect
+
+    
+Traceback – Better Idea
+    DDoS involves many packets on the same path
+    Store one link in each packet:
+        • Each router probabilistically stores own address
+        • Fixed space regardless of path length
+
+Edge Sampling
+    • Data fields written to packet:
+        • Edge: start and end IP addresses
+        • Distance: number of hops since edge stored
+    • Victim can deduct graph of edges and reconstruct attack tree
+
+    Packet received
+        • R1 receives packet from source or another router
+        • Packet contains space for start, end, distance
+    Begin writing edge
+        • R1 chooses to write start of edge
+        • Sets distance to 0
+    Finish writing edge
+        • R2 chooses not to overwrite edge
+        • Distance is 0 -> Write end of edge, increment distance to 1
+    Increment distance
+        • R3 chooses not to overwrite edge
+        • Distance >0 -> Increment distance to 2
+
+    Path reconstruction
+        • Extract information from attack packets   
+        • Build graph rooted at victim -> Each (start,end,distance) tuple provides an edge
+        • # packets needed to reconstruct path
+        • E(X) < in(d) / p (1 - p) ^ d-1
+        • where p is marking probability, d is length of path
+    
+    Pro's and Con's:
+        + Stable
+        + Meaningful results under partial deployment
+        + No bandwidth overhead
+        + Low processing overhead
+        - Works mainly for bandwidth exhaustion attacks
+            • Many packets needed for reconstructing attack path
+        - Victim under attack needs large amount of memory (many packets!) and processing time
+        - In order to avoid spoofing, authentication needed (PKI, signatures)
+
+
+Rate-limiting
+    • Allow a router to control the transmission rate of specific flows
+    • Can be used to control network congestion
+    • If packets arrive at a higher rate, they will be queued or dropped
+    • If attack flows can be identified, they can be rate-limited
+    • Rate-limiting mechanisms are deployed when the attack detection has a high number of false positives or cannot precisely characterize the attack stream.
+    • Problem: Legitimate users will experience degraded service
