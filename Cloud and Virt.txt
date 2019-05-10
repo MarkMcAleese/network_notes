@@ -1,0 +1,72 @@
+Cloud - Roles and Responsibilities
+
+    • Cloud consumer: A person or organization that maintains a business relationship with, and uses service from, cloud providers.
+    • Cloud provider: A person, organization, or entity responsible for making a service available to interested parties.
+    • Cloud auditor: A party that can conduct independent assessment of cloud services, information system operations, performance, 
+      and security of the cloud implementation .
+    • Cloud broker: An entity that manages the use, performance, and delivery of cloud services, and negotiates relationships between CPs and cloud consumers. 
+    • Cloud carrier: An intermediary that provides connectivity and transport of cloud services from CPs to cloud consumers.
+
+Network security challenges in the virtualized data center
+    • Hypervisor integrity
+    • A successful attack against a host’s hypervisor can compromise all of the workloads being delivered by the host.
+    • Intra-host communications
+    • Communications traffic between different VMs on the same physical host is often not visible and therefore cannot 
+      be controlled by traditional physical firewalls and IPS
+    • VM migration
+    • When VMs migrate from one physical host to another or from one physical site to another they tend to break network 
+      security tools that rely on physical and/or network-layer attributes
+
+    Cloud provider responsibilities:
+        • Secure underlying infrastructure and virtualization.
+        • Assure security isolation between tenants.
+        • Provide security capabilities for cloud users.
+        • Provide attack protection mechanisms e.g. DDoS/IDS
+
+    Cloud user responsibilities:
+        • Use the security capabilities/controls offered by the cloud provider e.g.
+            • security settings, such as identity management, to the virtual resources
+            • Monitoring and logging
+            • Image asset management
+            • Dedicated hosting (i.e. network isolation)
+        • Implement security controls on the virtual resource e.g. secure configuration/secure code
+
+Incident Response
+    Recommendations:
+        • SLAs and setting expectations around customer versus provider responsibilities
+        • Cloud customers must:
+            • Set up proper communication paths with the provider that can be used in an incident
+            • Understand the content and format of data that the CSP will supply for analysis and
+            evaluate whether available forensic data satisfies legal chain of custody requirements
+        • For each CSP, the approach to detecting and handling incidents involving the
+        resources hosted at that provider must be planned and described in the enterprise
+        incident response plan
+        • The SLA with each CSP must guarantee support for the incident handling required for
+        effective execution of the enterprise incident response plan
+
+Cloud Security as a Service (SecaaS)
+
+    • The Cloud Security Alliance defines SecaaS as the provision of security applications
+    and services via the cloud either to cloud-based infrastructure and software or from
+    the cloud to the customers’ on-premise systems
+
+    • The Cloud Security Alliance has identified the following SecaaS categories of service:
+            • Identity, entitlement, and access management services
+            • Cloud access and security brokers (also known as cloud security gateways)
+            • Web security gateways
+            • E-mail security
+            • Security assessment
+            • Web application firewalls
+            • Intrusion Detection/Prevention (IDS/IPS)
+            • Security information and event management (SIEM)
+            • Encryption and key management
+            • Business continuity and disaster recovery
+            • Security management
+            • Distributed Denial of Service Protection
+
+Cloud Security as a Service (SecaaS)
+    • Recommendations:
+        • Before engaging a SecaaS provider, be sure to understand any security-specific
+        requirements for data-handling (and availability), investigative, and compliance support.
+        • Pay particular attention to handling of regulated data, such as PII
+        • Understand data retention needs – consider standard data feeds to avoid lock-in

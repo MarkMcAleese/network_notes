@@ -1,0 +1,104 @@
+• Can you identify the main security issues with mobile devices?
+
+    Mobile communication faces all fixed network threats -  Plus some specific issues arising out of mobility of users and / or devices:
+        • Some existing threats become more dangerous:
+            • Wireless communication is more accessible for eavesdropping
+            • The lack of a physical connection makes it easier to access services
+        • Some new difficulties for realizing security services:
+            • Authentication has to be re-established when the mobile device moves
+            • Key management gets harder as peer identities can not be pre-determined
+        • One completely new threat:
+            • The location of a device / user becomes a more important piece of information that is worthwhile to eavesdrop on and thus to protect
+        Security Issues:
+            - Lack of physical controls.
+            - Use of not trusted mobile devices.
+            - Use of not trusted networks.
+            - Use of not trusted content.
+            - Use of applications create by unknown parties.
+            - Interaction with other systems.
+            - Use of location services.
+
+    Location privacy in mobile networks
+        • The basic location privacy design problem:
+            • A mobile device should be reachable
+            • No (single) entity in the network should be able to track the location of a mobile device
+        • Four classes of protection strategies:
+            • Regulatory approaches
+                • Legal rules for collecting and handling location information
+            • Privacy Policies
+                • Automatic ways for users to prevent certain uses of their personal data
+            • Anonymity
+                • Attempt to hide individuals’ identities, either by using pseudonyms or by withholding identity
+                information altogether
+            • Obfuscation
+                • Implementing the need-to-know principle i.e. reducing information to what is
+                absolutely necessary for a requested service
+            
+• Can you identify the main security issues with wireless devices?
+    Channel
+        - Wireless networking involves broadcast communications, which is far more susceptible to easvedropping and jamming.
+        - Wireless network are also more vulnerable to active attacks that exploit vulnerabilities in communications protocols.
+    Mobility:
+        - Wireless devices are far more portable and mobile than wired devices adds more risk.
+    Resources:
+        - Limited amount of resources on devices.
+    Accessibility:
+        - Wireless devices maybe be left unattended in remote/hostile locations.
+        
+    Threats:
+        Accidental association
+            • Company wireless LANs in close proximity may create overlapping transmission ranges
+            • A user intending to connect to one LAN may unintentionally lock on to a wireless access point from a neighboring network
+        Malicious association
+            • In this situation, a wireless device is configured to appear to be a legitimate access point, enabling the operator to steal passwords 
+             from legitimate users and then penetrate a wired network through a legitimate wireless access point
+        Ad hoc networks
+            • These are peer-to-peer networks between wireless computers with no access point between them
+            • Such networks can pose a security threat due to a lack of central point of control.
+        Nontraditional networks:
+            • Personal network Bluetooth devices, barcode readers, and handheld PDAs pose a security risk in terms of both eavesdropping and spoofing
+        Identity theft ( MAC spoofing ):
+            • This occurs when an attacker is able to eavesdrop on network traffic and identify the MAC address of a computer with network privileges
+        Man-in-the-middle attacks:
+            • This attack involves persuading a user and an access point to believe that they are talking to each other when in fact the communication is going through an intermediate attacking device
+            • Wireless networks are particularly vulnerable to such attacks
+        Denial of service ( DoS ):
+            • This attack occurs when an attacker continually bombards a wireless access point or some other accessible wireless port with various protocol messages designed to consume system resources
+            • The wireless environment lends itself to this type of attack because it is so easy for the attacker to direct multiple wireless messages at the target
+        Network injection:
+            • This attack targets wireless access points that are exposed to nonfiltered network traffic, such as routing protocol messages or network management messages
+
+• Can you identify threats unique to the wireless network?
+
+• Can you explain the security claims of IEEE 802.11 and the issue with these claims?
+    • Security services of IEEE 802.11 were originally realized by:
+        • Entity authentication service
+        • Wired Equivalent Privacy (WEP) mechanism
+    • WEP is supposed to provide the following security services:
+        • Confidentiality
+        • Data origin authentication / data integrity
+        • Access control
+    • WEP makes use of the following algorithms:
+        • The RC4 stream cipher
+        • The Cyclic Redundancy Code (CRC) checksum for detecting errors
+
+    The WEP has been designed to ensure the following security properties:
+        • Confidentiality:
+            • Only stations which possess KBSS can read messages protected with WEP
+        • Data origin authentication / data integrity:
+            • Malicious modifications of WEP protected messages can be detected
+        • Access control in conjunction with layer management:
+            • If set up, only WEP protected messages will be accepted by receivers
+            • So stations that do not know KBSS can not send to such receivers
+       
+        • Unfortunately, none of the above claims holds... 
+
+
+• Can you describe the security provided by Robust Security Network (RSN)/IEEE 802.11i?
+    RSN security consists of two basic subsystems:
+        • Data privacy mechanisms:
+            • TKIP - rapid re-keying to patch WEP for minimum privacy (marketing name WPA)
+            • AES encryption - robust data privacy for long term (marketing name WPA2)
+        • Security association management:
+            • Enterprise mode – based on 802.1X
+                • Personal mode – based on pre-shared keys
