@@ -40,15 +40,15 @@ Incident Response
             evaluate whether available forensic data satisfies legal chain of custody requirements
         • For each CSP, the approach to detecting and handling incidents involving the
         resources hosted at that provider must be planned and described in the enterprise
-        incident response plan
-        • The SLA with each CSP must guarantee support for the incident handling required for
-        effective execution of the enterprise incident response plan
+        incident response plan.
+        • The SLA with each CSP must guarantee support for the incident handling required for.
+        effective execution of the enterprise incident response plan.
 
-Cloud Security as a Service (SecaaS)
+Cloud Security as a Service (Seacat)
 
     • The Cloud Security Alliance defines SecaaS as the provision of security applications
     and services via the cloud either to cloud-based infrastructure and software or from
-    the cloud to the customers’ on-premise systems
+    the cloud to the customers’ on-premise systems.
 
     • The Cloud Security Alliance has identified the following SecaaS categories of service:
             • Identity, entitlement, and access management services
