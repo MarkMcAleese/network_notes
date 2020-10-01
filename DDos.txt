@@ -199,7 +199,7 @@ Edge Sampling
         • E(X) < in(d) / p (1 - p) ^ d-1
         • where p is marking probability, d is length of path
     
-    Pro's and Con's:
+    Pros and Cons:
         + Stable
         + Meaningful results under partial deployment
         + No bandwidth overhead
